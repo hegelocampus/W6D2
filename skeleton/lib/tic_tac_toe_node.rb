@@ -1,4 +1,5 @@
 require_relative 'tic_tac_toe'
+require 'byebug'
 
 class TicTacToeNode
   attr_reader :board, :prev_move_pos
@@ -9,19 +10,29 @@ class TicTacToeNode
     @next_mover_mark = next_mover_mark
     @prev_move_pos = prev_move_pos
   end
-
+  # :o :o :o
+  #    :
+  #
   def losing_node?(evaluator)
-    return true if board.winner == :x
+    if board.over?
+      return board.winner != evaluator && board.won?
+    end
 
-    if evaluator == :x
-      children.none? { |child| child.losing_node?(:x) }
-    else
-      children.any? { |child| child.losing_node?(:x) }
+    if evaluator == @next_mover_mark #players turn
+      children.all? { |child| child.losing_node?(evaluator) }
+    else #robot turn
+      children.any? { |child| child.losing_node?(evaluator) }
     end
   end
 
   def winning_node?(evaluator)
+    return true if board.winner == evaluator
 
+    if evaluator == @next_mover_mark #players turn
+      children.all? { |child| child.winning_node?(evaluator) }
+    else #robot turn
+      children.any? { |child| child.winning_node?(evaluator) }
+    end
   end
 
   # This method generates an array of all moves that can be made after
