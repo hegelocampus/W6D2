@@ -1,26 +1,6 @@
 require_relative 'polytree_node'
 require 'byebug'
 
-# todo: we need to build_move_tree; begins at root_node
-#       call build_move_tree in initialize
-#       need a find_path method; traverses the move_tree
-#       method self.valid_moves(pos); up to 8 possible moves
-#       avoid repeating positions in the move_tree
-#       variable @considered_positions; tracks pos we considered
-#            - initalize as array containing just the starting position
-#       method new_move_positions(pos); calls valid_moves(pos)
-#            - filter out any positions that are already in @considered_positions
-#            - add remaining new positions to @considered_positions
-#            - return new positions
-#       method build_move_tree; use new_move_positions(pos)
-#            - IMPORTANT: Build tree in breadth-first manner
-#            - use queue to process nodes in FIFO order
-#            - start with a root node and explore moves one position at a time
-#       method build_move_tree
-#            - queue << new_move_positions.map { |ele| Polytree_node.new(ele) }
-#            - repeat on queue until queue.empty?
-#       Then Code Review
-#       Then Pt. 2
 
 class Knight_path_finder
   attr_reader :root_node
@@ -72,14 +52,25 @@ class Knight_path_finder
 
   end
 
+  def find_path(end_pos)
+    trace_path_back(bfs(end_pos)).map { |node| node.value }
+    ## This version returns positions rather than the node obj 
+    #trace_path_back(bfs(end_pos)).map { |node| node.value }
+  end
+
+  def trace_path_back(node)
+    path = [node]
+
+    path << path[-1].parent until path[-1] == root_node
+
+    path.reverse
+  end
+
   private
 end
 
-# ▄  ▄  ▄  ▄  ▄  ▄  ▄  ▄
-# ▄  ▄  ▄  ▄  ▄  ▄  ▄  ▄
-# ▄  ▄  ▄  ▄  ▄  ▄  ▄  ▄
-# ▄  ▄  ▄  2  E  2  ▄  2
-# ▄  ▄  2  ▄  ▄  ▄  ▄  ▄
-# ▄  2  ▄  ▄  1  ▄  1  ▄
-# ▄  ▄  ▄  1  ▄  ▄  ▄  1
-# ▄  2  ▄  ▄  ▄  S  ▄  ▄
+if __FILE__ == $PROGRAM_NAME
+  kpf = Knight_path_finder.new([0, 0])
+  p kpf.find_path([7, 6]) # => [[0, 0], [1, 2], [2, 4], [3, 6], [5, 5], [7, 6]]
+  p kpf.find_path([6, 2]) # => [[0, 0], [1, 2], [2, 0], [4, 1], [6, 2]]
+end
