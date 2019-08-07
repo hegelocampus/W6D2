@@ -45,14 +45,22 @@ Likewise, a winning node means either:
         It is the opponent's turn, and all of the children nodes are winning nodes for the player (even TicTacToeKasparov can't beat you from here).
 
 Notice that winning_node? and losing_node? are both defined recursively. This is what makes them look at all the ways the game can play out. For instance, a node can be a winning node even though we won't win on the very next turn; it just requires that, assuming we play perfectly, eventually we'll beat the opponent no matter what they do.
+
 Phase II: SuperComputerPlayer
 
 Write a subclass of ComputerPlayer; we'll override the #move method to use our TicTacToeNode.
 
-In the #move method, build a TicTacToeNode from the board stored in the game passed in as an argument. Next, iterate through the children of the node we just created. If any of the children is a winning_node? for the mark passed in to the #move method, return that node's prev_move_pos because that is the position that causes a certain victory! I told you we would use that later!
+In the #move method, build a TicTacToeNode from the board stored in the game passed in as an argument. Next, iterate through the children of the node we just created. If any of the children are a winning_node? for the mark passed in to the #move method, return that node's prev_move_pos because that is the position that causes a certain victory! I told you we would use that later!
 
 If none of the children of the node we created are winning_node?s, that's ok. We can just pick one that isn't a losing_node? and return its prev_move_pos. That will prevent the opponent from ever winning, and that's almost as good. To make that even more clear: if a winner isn't found, pick one of the children of our node that returns false to losing_node?.
 
 Finally, raise an error if there are no non-losing nodes. In TTT, if we play perfectly, we should always be able to force a draw.
 
 Run your TTT game with the SuperComputerPlayer and weep tears of shame because you can't beat a robot at tic tac toe.
+
+#move(game, mark)
+1. build a TicTacToeNode from the board stored in the game passed in as an argument. 
+2. iterate through the children of the node we just created.
+3. If any of the children are a winning_node? for the mark passed in to the #move method, return that node's prev_move_pos
+4. If none of the children of the node we created are winning_node?s, pick one that isn't a losing_node? and return its prev_move_pos. To make that even more clear: if a winner isn't found, pick one of the children of our node that returns false to losing_node?.
+5. raise an error if there are no non-losing nodes. In TTT, if we play perfectly, we should always be able to force a draw.

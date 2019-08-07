@@ -205,6 +205,8 @@ class ComputerPlayer
   end
 end
 
+#require_relative 'super_computer_player'
+
 if __FILE__ == $PROGRAM_NAME
   puts "Play the dumb computer!"
   hp = HumanPlayer.new("Ned")
